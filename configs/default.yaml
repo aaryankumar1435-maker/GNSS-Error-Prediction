@@ -1,0 +1,35 @@
+data:
+  csv_path: data/synthetic_gnss_errors.csv
+  n_geo: 3
+  n_meo: 4
+  train_days: 7
+  test_days: 1
+  step_minutes: 15
+  seed: 42
+
+dataset:
+  lookback_steps: 192      # 48h of history
+  horizon_steps: 96        # predict the full next day (15-min steps)
+  channels: [clock_error_ns, eph_radial_m, eph_along_m, eph_cross_m]
+
+model:
+  name: lstm
+  hidden_size: 128
+  num_layers: 2
+  dropout: 0.1
+  sat_embed_dim: 8
+  rnn_type: lstm           # lstm | gru
+
+train:
+  batch_size: 16
+  epochs: 60
+  lr: 0.001
+  weight_decay: 0.0001
+  early_stopping_patience: 10
+  val_fraction: 0.15
+  checkpoint_path: outputs/checkpoint.pt
+
+eval:
+  horizons_minutes: [15, 30, 60, 120, 240, 480, 720, 1440]
+  metrics_path: outputs/metrics.json
+  plots_dir: outputs/plots
